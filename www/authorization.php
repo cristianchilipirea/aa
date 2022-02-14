@@ -17,7 +17,7 @@ class TokenAuthentication
 	{
 		if ($timestamp + $this->expirationTime < time())
 			return false;
-		return (strcmp($token, md5($username . $this->salt . $timestamp)) == 0);
+		return (strcmp($token, md5($username . trim($this->salt) . $timestamp)) == 0);
 	}
 
 	function getToken($timestamp, $username)
@@ -27,9 +27,9 @@ class TokenAuthentication
 
 	function auth()
 	{
-		if (!isset($_GET['token']) || !isset($_GET['timestamp']) || !isset($_GET['username']))
+		if (!isset($_GET['key']) || !isset($_GET['timestamp']) || !isset($_GET['username']))
 			return false;
-		return $this->hasAccess($_GET['token'], $_GET['timestamp'], $_GET['username']);
+		return $this->hasAccess($_GET['key'], $_GET['timestamp'], $_GET['username']);
 	}
 }
 

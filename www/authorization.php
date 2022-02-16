@@ -27,9 +27,10 @@ class TokenAuthentication
 
 	function auth()
 	{
-		if (!isset($_GET['key']) || !isset($_GET['timestamp']) || !isset($_GET['username']))
-			return false;
-		return $this->hasAccess($_GET['key'], $_GET['timestamp'], $_GET['username']);
+		if (isset($_GET['key']) && isset($_GET['timestamp']) && isset($_GET['username']))
+			return $this->hasAccess($_GET['key'], $_GET['timestamp'], $_GET['username']);
+		if (isset($_POST['key']) && isset($_POST['timestamp']) && isset($_POST['username']))
+			return $this->hasAccess($_POST['key'], $_POST['timestamp'], $_POST['username']);
 	}
 }
 
@@ -83,6 +84,18 @@ function isAuthenticated()
 		return true;
 	$tokenAuthentication = new TokenAuthentication();
 	return $tokenAuthentication->auth();
+}
+
+function getUsername()
+{
+	if (isset($_SESSION["username"]))
+		return $_SESSION["username"];
+	if (isset($_GET['username']))
+		return $_GET['username'];
+	if (isset($_POST['username']))
+		return $_POST['username'];
+	else
+		return "NOTLOGGEDIN";
 }
 
 function isAdmin()
